@@ -5,13 +5,14 @@ from dotenv import load_dotenv
 import os
 
 class Autorization:
-    def __init__(self):
+    def __init__(self, platform):
+        self.platform = platform
         self.set_api_key()
 
     def set_api_key(self):
         load_dotenv()
-        self.access_key = os.getenv('access_key')
-        self.secret_key = os.getenv('secret_key')
+        self.access_key = os.getenv( f"{self.platform}_access")
+        self.secret_key = os.getenv(f"{self.platform}_secret")
 
     def make_jwt_token(self):
         payload = {
@@ -26,6 +27,6 @@ class Autorization:
     def get_authorization_token(self):
         return 'Bearer {}'.format(self.make_jwt_token())
     
-authorization = Autorization()
+authorization = Autorization('bithumb')
 token  = authorization.get_authorization_token()
 print(token)
