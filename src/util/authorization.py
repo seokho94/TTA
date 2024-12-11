@@ -5,28 +5,19 @@ from dotenv import load_dotenv
 import os
 
 class Autorization:
-    def __init__(self, platform):
-        self.platform = platform
-        self.set_api_key()
-
-    def set_api_key(self):
-        load_dotenv()
-        self.access_key = os.getenv( f"{self.platform}_access")
-        self.secret_key = os.getenv(f"{self.platform}_secret")
-
-    def make_jwt_token(self):
+    @staticmethod
+    def make_jwt_token(platform):
+        access_key = os.getenv(f"{platform}_access")
+        secret_key = os.getenv(f"{platform}_secret")
         payload = {
-            'access_key': self.access_key,
+            'access_key': access_key,
             'nonce': str(uuid.uuid4()),
             'timestamp': round(time.time() * 1000)
         }
-        jwt_token = jwt.encode(payload, self.secret_key)
+        jwt_token = jwt.encode(payload, secret_key)
 
-        return jwt_token
+        return 'Bearer {}'.format(jwt_token)
 
-    def get_authorization_token(self):
-        return 'Bearer {}'.format(self.make_jwt_token())
-    
-authorization = Autorization('bithumb')
-token  = authorization.get_authorization_token()
-print(token)
+# Example Code
+# token  = Autorization.make_jwt_token('bithumb')
+# print(token)
