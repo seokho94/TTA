@@ -29,10 +29,11 @@ class BithumbRequestor(AbstractRequestor):
       > Desc: 상세 정보 조회 여부
     """
     @staticmethod
-    def get_market_codes(isDetail=False):
+    def get_market_codes(isDetail=None):
         url = "https://api.bithumb.com/v1/market/all"
         params = {'isDetail': isDetail}
-        return BithumbRequestor.get(url=url, params=params)
+        remove_none = {k: v for k, v in params.items() if v is not None}
+        return BithumbRequestor.get(url=url, params=remove_none)
 
     """
     Bithum 분 단위 캔들 조회 Api
@@ -60,7 +61,7 @@ class BithumbRequestor(AbstractRequestor):
       > Max: 200
     """
     @staticmethod
-    def get_min_candles(market, to=None, count=1, unit=1):
+    def get_min_candles(market, to=None, count=None, unit=None):
         #market: String, to: String, count: Integer
         url = f"https://api.bithumb.com/v1/candles/minutes/{unit}"
         params = {
@@ -99,7 +100,7 @@ class BithumbRequestor(AbstractRequestor):
       > ex) 'KRW'
     """
     @staticmethod
-    def get_day_candles(market, to=None, count=1, convertingPriceUnit=None):
+    def get_day_candles(market, to=None, count=None, convertingPriceUnit=None):
         url = "https://api.bithumb.com/v1/candles/days"
         params = {
             "market": market,
@@ -133,7 +134,7 @@ class BithumbRequestor(AbstractRequestor):
       > Max: 200
     """
     @staticmethod
-    def get_week_candles(market, to=None, count=1):
+    def get_week_candles(market, to=None, count=None):
         url = "https://api.bithumb.com/v1/candles/weeks"
         params = {
             "market": market,
@@ -166,7 +167,7 @@ class BithumbRequestor(AbstractRequestor):
       > Max: 200
     """
     @staticmethod
-    def get_month_candles(market, to=None, count=1):
+    def get_month_candles(market, to=None, count=None):
         url = "https://api.bithumb.com/v1/candles/months"
         params = {
             "market": market,
@@ -177,3 +178,63 @@ class BithumbRequestor(AbstractRequestor):
         remove_none = {k: v for k, v in params.items() if v is not None}
 
         return BithumbRequestor.get(url=url, params=remove_none)
+    
+    """
+    Bithum 최근 체결 내역 조회 Api
+    Parameter
+     (1) market
+      > Type: String
+      > requried: True
+      > Desc: 마켓 코드 값
+      > ex) 'KRW-BTC'
+     (2) to
+      > Type: String
+      > Required: False
+      > Desc: 마지막 체결 시각
+      > ex) 15:58:10 or 155810  (HH:mm:ss or HHmmss)
+     (3) count
+      > Type: Integer
+      > Required: Fasle
+      > default: 1
+      > Desc: 체결 개수
+     (4) cursor
+      > Type: String
+      > Required: Fasle
+      > Desc: 페이지네이션 커서
+     (5) daysAgo
+      > Type: Int32
+      > Required: Fasle
+      > Desc: 최근 7일 이내의 이전 데이터 조회
+      > available: 1, 2, ,3, 4, 5, 6, 7 
+    """
+    @staticmethod
+    def get_trade_ticks(market, to=None, count=None, cursor=None, daysAgo=None):
+        url="https://api.bithumb.com/v1/trades/ticks"
+        params = {
+            "market": market,
+            "to": to,
+            "count": count,
+            "cursor": cursor,
+            "daysAgo": daysAgo
+        }
+
+        remove_none = {k: v for k, v in params.items() if v is not None}
+
+        return BithumbRequestor.get(url=url, params=remove_none)
+    
+    """
+    Bithum 현재가 정보 조회 Api
+    Parameter
+     (1) markets
+      > Type: String
+      > Required: True
+      > default: False
+      > Desc: 마켓 코드, 여러 코인 조회 시 반점으로 구분
+      > ex) KRW-BTC,KRW-XRP,KRW-ETH
+    """
+    @staticmethod
+    def get_current_price(markets):
+        url = "https://api.bithumb.com/v1/ticker"
+        params = { "markets": markets }
+
+        return BithumbRequestor.get(url=url, params=params)
