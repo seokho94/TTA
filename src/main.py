@@ -6,7 +6,8 @@ class Main:
         self.bithumb_requestor = BithumbRequestor()
 
     def run_app(self):
-        self.bithumb_requestor.test()
+        response = self.bithumb_requestor.get_market_codes()
+        print(response.text)
 
 
 main = Main()

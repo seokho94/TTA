@@ -2,8 +2,8 @@ from libs.requestor.abstract_requestor import AbstractRequestor
 import requests
 
 class BithumbRequestor(AbstractRequestor):
-    def get(url, param={}):
-        requests.get(url)
+    def get(url, headers={}, param={}):
+        return requests.get(url, params=param, headers=headers)
 
     def post(url, param={}):
         requests.post(url, param)
@@ -15,5 +15,8 @@ class BithumbRequestor(AbstractRequestor):
         requests.delete(url, param)
 
     @staticmethod
-    def test():
-        print('test code')
+    def get_market_codes(isDetail=False):
+        url = "https://api.bithumb.com/v1/market/all"
+        headers = {"accept": "application/json"}
+        params = {'isDetail': isDetail}
+        return BithumbRequestor.get(url, headers, params)
