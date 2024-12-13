@@ -1,3 +1,19 @@
+from libs.requestor.abstract_requestor import AbstractRequestor
 import requests
 
-# 이 클래스는 공통적으로 사용할 Api Requestor입네다
+class BithumbRequestor(AbstractRequestor):
+    def get(url, param={}):
+        requests.get(url)
+
+    def post(url, param={}):
+        requests.post(url, param)
+
+    def put(url, param={}):
+        requests.put(url, param)
+
+    def delete(url, param={}):
+        requests.delete(url, param)
+
+    @staticmethod
+    def test():
+        print('test code')
