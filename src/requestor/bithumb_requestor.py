@@ -1,11 +1,17 @@
 from asyncio.windows_events import NULL
+from pdb import runcall
+from sqlite3 import paramstyle
 from libs.requestor.abstract_requestor import AbstractRequestor
 import requests
 
+from util.authorization import Autorization
+
+
 """
 Bithumb 거래소 Requestor
-"""
 
+PUBLIC API
+"""
 class BithumbRequestor(AbstractRequestor):
     def get(url, headers={"accept": "application/json"}, params={}):
         return requests.get(url, params=params, headers=headers)
@@ -238,3 +244,32 @@ class BithumbRequestor(AbstractRequestor):
         params = { "markets": markets }
 
         return BithumbRequestor.get(url=url, params=params)
+    
+    @staticmethod
+    def get_ticker_info(markets):
+        url = "https://api.bithumb.com/v1/orderbook"
+        params = { "markets": markets }
+
+        return BithumbRequestor.get(url=url, params=params)
+    
+    @staticmethod
+    def get_warning_info():
+        url = "https://api.bithumb.com/v1/market/virtual_asset_warning"
+
+        return BithumbRequestor.get(url=url)
+    
+    """
+Bithumb 거래소 Requestor
+
+PRIVATE API
+"""
+    @staticmethod
+    def get_all_accounts():
+        url = "https://api.bithumb.com/v1/accounts"
+        
+        authorization_token = Autorization.make_jwt_token('bithumb')
+        
+        print(authorization_token)
+        headers = { "Authorization": authorization_token }
+
+        return BithumbRequestor.get(url=url, headers=headers)
