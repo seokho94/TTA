@@ -67,7 +67,7 @@ class BithumbRequestor(AbstractRequestor):
       > Max: 200
     """
     @staticmethod
-    def get_min_candles(market, to=None, count=None, unit=None):
+    def get_min_candles(market, to=None, count=None, unit=1):
         #market: String, to: String, count: Integer
         url = f"https://api.bithumb.com/v1/candles/minutes/{unit}"
         params = {
