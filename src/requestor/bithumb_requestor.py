@@ -1,4 +1,3 @@
-from asyncio.windows_events import NULL
 from pdb import runcall
 from sqlite3 import paramstyle
 from libs.requestor.abstract_requestor import AbstractRequestor
@@ -13,17 +12,21 @@ Bithumb 거래소 Requestor
 PUBLIC API
 """
 class BithumbRequestor(AbstractRequestor):
+    @staticmethod
     def get(url, headers={"accept": "application/json"}, params={}):
         return requests.get(url, params=params, headers=headers)
 
+    @staticmethod
     def post(url, params={}):
-        requests.post(url, params)
+        return requests.post(url, data=params)
 
+    @staticmethod
     def put(url, params={}):
-        requests.put(url, params)
+        return requests.put(url, data=params)
 
+    @staticmethod
     def delete(url, params={}):
-        requests.delete(url, params)
+        return requests.delete(url, params=params)
 
     """
     Bithum 마켓 코드 조회 Api
